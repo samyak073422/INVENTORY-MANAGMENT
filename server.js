@@ -9,19 +9,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const usersFile = "./users.json";
-const inventoryFile = "./inventory.json";
 
-// Ensure users file exists
+// Ensure the users file exists
 if (!fs.existsSync(usersFile)) {
   fs.writeFileSync(usersFile, "[]", "utf-8");
 }
 
-// Ensure inventory file exists
-if (!fs.existsSync(inventoryFile)) {
-  fs.writeFileSync(inventoryFile, "[]", "utf-8");
-}
-
-// Register
+// Register API
 app.post("/api/register", (req, res) => {
   const { username, password } = req.body;
 
@@ -38,7 +32,7 @@ app.post("/api/register", (req, res) => {
   res.json({ success: true, message: "User registered successfully." });
 });
 
-// Login
+// Login API
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
 
@@ -52,30 +46,11 @@ app.post("/api/login", (req, res) => {
   res.json({ success: true, message: "Login successful." });
 });
 
-// Get all inventory items
-app.get("/api/inventory", (req, res) => {
-  const items = JSON.parse(fs.readFileSync(inventoryFile, "utf-8"));
-  res.json(items);
+// Home route
+app.get("/", (req, res) => {
+  res.send("Server is running. Use /api/login or /api/register");
 });
 
-// Add new inventory item
-app.post("/api/inventory", (req, res) => {
-  const { name, quantity } = req.body;
-  const items = JSON.parse(fs.readFileSync(inventoryFile, "utf-8"));
-
-  const newItem = {
-    id: Date.now(), // simple ID
-    name,
-    quantity,
-  };
-
-  items.push(newItem);
-  fs.writeFileSync(inventoryFile, JSON.stringify(items, null, 2));
-
-  res.json({ success: true, message: "Item added", item: newItem });
-});
-
-// Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
