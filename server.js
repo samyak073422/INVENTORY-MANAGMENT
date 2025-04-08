@@ -16,7 +16,7 @@ if (!fs.existsSync(usersFile)) {
 }
 
 // Register API
-app.post("/api/register", (req, res) => {
+app.post("https://inventory-managment-lspj.onrender.com/r", (req, res) => {
   const { username, password } = req.body;
 
   const users = JSON.parse(fs.readFileSync(usersFile, "utf-8"));
@@ -33,7 +33,7 @@ app.post("/api/register", (req, res) => {
 });
 
 // Login API
-app.post("/api/login", (req, res) => {
+app.post("https://inventory-managment-lspj.onrender.com/", (req, res) => {
   const { username, password } = req.body;
 
   const users = JSON.parse(fs.readFileSync(usersFile, "utf-8"));
@@ -47,7 +47,7 @@ app.post("/api/login", (req, res) => {
 });
 
 // Home route
-app.get("/", (req, res) => {
+app.get("https://inventory-managment-lspj.onrender.com/", (req, res) => {
   res.send("Server is running. Use /api/login or /api/register");
 });
 
