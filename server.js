@@ -46,13 +46,13 @@ app.post("/api/login", (req, res) => {
   res.json({ success: true, message: "Login successful." });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, () => {  body: JSON.stringify({ username, password })
+
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
 fetch("http://localhost:3000/api/login", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ username, password })
 })
 .then(res => res.json())
 .then(data => {
