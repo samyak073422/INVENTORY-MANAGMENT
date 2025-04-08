@@ -15,7 +15,7 @@ function toggleAuthForm() {
       return;
     }
   
-    fetch("http://localhost:3000/api/register", {
+    fetch("https://inventory-managment-lspj.onrender.com/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -39,7 +39,7 @@ function toggleAuthForm() {
     const username = document.getElementById("loginUsername").value.trim();
     const password = document.getElementById("loginPassword").value;
   
-    fetch("http://localhost:3000/api/login", {
+    fetch("https://inventory-managment-lspj.onrender.com/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
