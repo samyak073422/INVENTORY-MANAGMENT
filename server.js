@@ -9,10 +9,16 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const usersFile = "./users.json";
+const inventoryFile = "./inventory.json";
 
-// Ensure the users file exists
+// Ensure users file exists
 if (!fs.existsSync(usersFile)) {
   fs.writeFileSync(usersFile, "[]", "utf-8");
+}
+
+// Ensure inventory file exists
+if (!fs.existsSync(inventoryFile)) {
+  fs.writeFileSync(inventoryFile, "[]", "utf-8");
 }
 
 // Register
@@ -46,37 +52,30 @@ app.post("/api/login", (req, res) => {
   res.json({ success: true, message: "Login successful." });
 });
 
-app.listen(PORT, () => {  body: JSON.stringify({ username, password })
+// Get all inventory items
+app.get("/api/inventory", (req, res) => {
+  const items = JSON.parse(fs.readFileSync(inventoryFile, "utf-8"));
+  res.json(items);
+});
 
+// Add new inventory item
+app.post("/api/inventory", (req, res) => {
+  const { name, quantity } = req.body;
+  const items = JSON.parse(fs.readFileSync(inventoryFile, "utf-8"));
+
+  const newItem = {
+    id: Date.now(), // simple ID
+    name,
+    quantity,
+  };
+
+  items.push(newItem);
+  fs.writeFileSync(inventoryFile, JSON.stringify(items, null, 2));
+
+  res.json({ success: true, message: "Item added", item: newItem });
+});
+
+// Start server
+app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
-});
-fetch("http://localhost:3000/api/login", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-})
-.then(res => res.json())
-.then(data => {
-  if (data.success) {
-    // Save username locally and redirect to dashboard
-    localStorage.setItem("activeUser", username);
-    window.location.href = "dashboard.html";
-  } else {
-    alert(data.message);
-  }
-});
-app.get("/api/inventory", async (req, res) => {
-  try {
-    const items = await InventoryItem.find(); // Assuming your model name
-    res.json(items);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-app.get("/api/inventory", async (req, res) => {
-  try {
-    const items = await InventoryItem.find(); // Assuming your model name
-    res.json(items);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
-  }
 });
